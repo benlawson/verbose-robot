@@ -8,8 +8,8 @@ import cv2
 import caffe
 import numpy as np
 
-model = "../models/itracker_deploy.prototxt"
-weights = "../models/snapshots/itracker_iter_92000.caffemodel"
+model = "models/itracker_deploy.prototxt"
+weights = "models/itracker_iter_92000.caffemodel"
 
 class MyNet(object):
     def __init__(self):
@@ -17,20 +17,20 @@ class MyNet(object):
 
     def predict(self, image_left, image_right, image_face, facegrid):
         # batch size is 256
-        image_left = cv2.resize(image_left, (224, 224)).T
-        image_left = np.array([image_left  for _ in range(256)])
+        # image_left = cv2.resize(image_left, (224, 224)).T
+        # image_left = np.array([image_left  for _ in range(256)])
         self.net.blobs["image_left"].data[...] = image_left
 
-        image_right = cv2.resize(image_right, (224, 224)).T
-        image_right = np.array([image_right for _ in range(256)])
+        # image_right = cv2.resize(image_right, (224, 224)).T
+        # image_right = np.array([image_right for _ in range(256)])
         self.net.blobs["image_right"].data[...] = image_right
 
-        image_face = cv2.resize(image_face, (224, 224)).T
-        image_face = np.array([image_face for _ in range(256)])
+        # image_face = cv2.resize(image_face, (224, 224)).T
+        # image_face = np.array([image_face for _ in range(256)])
         self.net.blobs["image_face"].data[...] = image_face
 
-        facegrid = cv2.resize(facegrid, (25, 25)).T.reshape(625, 1, 1)
-        facegrid = np.array([facegrid for _ in range(256)])
+        # facegrid = cv2.resize(facegrid, (25, 25)).T.reshape(625, 1, 1)
+        # facegrid = np.array([facegrid for _ in range(256)])
         self.net.blobs["facegrid"].data[...] = facegrid
 
         return self.net.forward()['fc3'].mean(axis=0)
@@ -87,4 +87,3 @@ class MyNet(object):
         return img[y1:y2, x1:x2]
 
 
-net = MyNet()
