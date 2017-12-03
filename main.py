@@ -29,7 +29,7 @@ for idx, frame in enumerate(frames):
     face_buffer[idx]  = face.T
     right_buffer[idx] = right_eye.T
     left_buffer[idx]  = left_eye.T
-    #grid_buffer[idx]  = grid.T
-    grid_buffer[idx]  = np.zeros((625, 1, 1))
+    grid_buffer[idx]  = grid.T.reshape(625, 1, 1)
 
 predictions = net.predict(face_buffer, right_buffer, left_buffer, grid_buffer)
+print(predictions[:10])

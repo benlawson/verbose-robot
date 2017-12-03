@@ -33,7 +33,7 @@ class MyNet(object):
         # facegrid = np.array([facegrid for _ in range(256)])
         self.net.blobs["facegrid"].data[...] = facegrid
 
-        return self.net.forward()['fc3'].mean(axis=0)
+        return self.net.forward()['fc3']
 
     def load_json_data(self, path_to_file, num_of_frames=1):
         info = json.load(open(path_to_file))

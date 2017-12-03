@@ -1,6 +1,7 @@
 import logging
 
 import cv2
+import numpy as np
 
 FORMAT = '%(asctime)-15s %(message)s'
 logging.basicConfig(format=FORMAT)
@@ -41,8 +42,9 @@ def process_face(img, resize=True, output=False):
     left_eye  (numpy.array): roi of interest corresponding to the left eye
     face_grid (numpy.array): a grid that is marked where the face is
     '''
-    display = img[:]
+    display = img[:] # make a copy
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    grid = np.zeros(gray.shape) # make a copy
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     if len(faces) > 1:
@@ -52,10 +54,10 @@ def process_face(img, resize=True, output=False):
         cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
         face_gray = gray[y:y+h, x:x+w]
         face_color = display[y:y+h, x:x+w]
+        grid[y:y+h, x:x+w] = 1
         face = img[y:y+h, x:x+w]
 
         eyes = eye_cascade.detectMultiScale(face_gray)
-        #eyes = sorted(eyes, lambda d,e: d[0] < e[0],reverse=True)
         labels = ['right', 'left']
 
         # loop over eye detections
@@ -71,13 +73,16 @@ def process_face(img, resize=True, output=False):
                 right_eye = face_color[ey:ey+eh, ex:ex+ew]
             elif label == 'left':
                 left_eye  = face_color[ey:ey+eh, ex:ex+ew]
+
+
     if output:
         cv2.imwrite(output, display)
     if resize:
         face = cv2.resize(face, (224, 224))
         right_eye = cv2.resize(right_eye, (224, 224))
         left_eye = cv2.resize(left_eye, (224, 224))
-    return face, right_eye, left_eye, None
+        grid = cv2.resize(grid, (25, 25))
+    return face, right_eye, left_eye, grid
 
 
 # test = "/bigdrive/gaze/data/01036/frames/00151.jpg"
