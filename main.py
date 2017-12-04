@@ -1,6 +1,7 @@
 import glob
 
 import cv2
+import joblib
 import numpy as np
 
 from face_extraction import process_face
@@ -13,7 +14,7 @@ faces = []
 right_eyes = []
 left_eyes = []
 grids = []
-frames = glob.glob("./data/*")
+frames = sorted(glob.glob("./data/*"))
 
 face_buffer  = np.zeros((256, 3, 224, 224))
 right_buffer = np.zeros((256, 3, 224, 224))
@@ -24,7 +25,13 @@ for idx, frame in enumerate(frames):
     if idx > 256:
         break
     img = cv2.imread(frame)
-    face, right_eye, left_eye, grid = process_face(img)
+    if type(img) == type(None):
+        face         = np.zeros((224, 224, 3))
+        right_eye    = np.zeros((224, 224, 3))
+        left_eye     = np.zeros((224, 224, 3))
+        grid         = np.zeros((625, 1, 1))
+    else:
+        face, right_eye, left_eye, grid = process_face(img)
 
     face_buffer[idx]  = face.T
     right_buffer[idx] = right_eye.T
@@ -32,4 +39,4 @@ for idx, frame in enumerate(frames):
     grid_buffer[idx]  = grid.T.reshape(625, 1, 1)
 
 predictions = net.predict(face_buffer, right_buffer, left_buffer, grid_buffer)
-print(predictions[:10])
+joblib.dump(predictions, "predictions.joblib")
