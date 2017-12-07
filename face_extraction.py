@@ -102,9 +102,14 @@ def process_face(img, resize=True, output=False):
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
     if len(faces) > 1:
-        print("More than one face")
         #FIXME
-        return None
+        print("More than one face")
+        # just taking the biggest one!
+        size_of_bounding_box = []
+        for x, y, w, h in faces:
+            size_of_bounding_box.append(w*h)
+        size_of_bounding_box = np.array(size_of_bounding_box)
+        faces = [faces[size_of_bounding_box.argmax()]]
 
     if len(faces) < 1:
         print("Less than one face")
@@ -138,6 +143,7 @@ def process_face(img, resize=True, output=False):
             size_of_bounding_box[biggest] = 0
             biggest = size_of_bounding_box.argmax()
             new_eyes.append( eyes[biggest])
+            eyes = new_eyes
 
         elif len(eyes) == 1:
             #FIXME

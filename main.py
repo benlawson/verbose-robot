@@ -22,7 +22,7 @@ left_buffer  = np.zeros((256, 3, 224, 224))
 grid_buffer  = np.zeros((256, 625, 1, 1))
 
 for idx, frame in enumerate(frames):
-    if idx > 256:
+    if idx > 255:
         break
     img = cv2.imread(frame)
     if type(img) == type(None):
