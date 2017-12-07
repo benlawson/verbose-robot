@@ -7,22 +7,43 @@ import numpy as np
 screen_width = 1536 #pixel
 screen_height = 864 #pixel
 
-screen_physical_width =  10.125 # inch
-screen_physical_height =  5.75  # inch
+# screen_physical_width =  10.125 # inch
+# screen_physical_height =  5.75  # inch
 
+screen_physical_width =  7.9 # inch
+screen_physical_height =  5.3 # inch
+
+
+
+### code for ipad mini ###
+#screen_physical_width =  5 # inch
+#screen_physical_height =  8.4 # inch
+#
+#predictions = joblib.load("../predictions.joblib")
+#ys, xs = zip(*predictions)
+#
+#ys = (np.array(ys) * 0.393701  *  screen_height / screen_physical_height) + screen_height/8
+#xs = (np.array(xs) * 0.393701  *  screen_width / screen_physical_width)
+#
+
+### code for chromebook ###
 predictions = joblib.load("../predictions.joblib")
 ys, xs = zip(*predictions)
 
-ys = (np.array(ys) * 0.393701  * screen_height / screen_physical_height)*-1 + screen_height/4
-xs = (np.array(xs) * 0.393701  * screen_width / screen_physical_width) + screen_width/2
+screen_physical_width =  7.9 # inch
+screen_physical_height =  5.5 # inch
+
+xs = (np.array(xs) * 0.393701  *  screen_width / screen_physical_width) + screen_width/2.8
+ys = -1* (np.array(ys) * 0.393701  *  screen_height / screen_physical_height) + screen_height/1.4
+#
 
 
 # remove garabage points
-xs[np.where(xs == 621.34094)] = np.nan
-xs[np.where(xs == 621.34088)] = np.nan
+# xs[np.where(xs == 621.34094)] = np.nan
+# xs[np.where(xs == 621.34088)] = np.nan
 
-ys[np.where(ys == 16.699905)] = np.nan
-ys[np.where(ys == 16.699926)] = np.nan
+# ys[np.where(ys == 16.699905)] = np.nan
+# ys[np.where(ys == 16.699926)] = np.nan
 
 ys = np.mean(ys.reshape(-1, 4), axis=1)
 xs = np.mean(xs.reshape(-1, 4), axis=1)
